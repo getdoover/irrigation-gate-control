@@ -9,7 +9,7 @@
         "long_description": "README.md",
         "depends_on": [],
         "owner_org_key": "",
-        "image_name": "ghcr.io/getdoover/irrigation_gate_control:latest",
+        "image_name": "ghcr.io/getdoover/irrigation_gate_control:main",
         "container_registry_profile_key": "",
         "build_args": "--platform linux/amd64,linux/arm64",
         "config_schema": {
@@ -18,33 +18,54 @@
             "title": "Application Config",
             "type": "object",
             "properties": {
-                "digital_outputs_enabled": {
-                    "title": "Digital Outputs Enabled",
-                    "x-name": "digital_outputs_enabled",
-                    "x-hidden": false,
-                    "type": "boolean",
-                    "default": true
-                },
-                "a_funny_message": {
-                    "title": "A Funny Message",
-                    "x-name": "a_funny_message",
-                    "x-hidden": false,
-                    "type": "string"
-                },
-                "simulator_app_key": {
+                "hydraulic_controller": {
                     "format": "doover-application",
-                    "title": "Simulator App Key",
-                    "x-name": "simulator_app_key",
+                    "title": "Hydraulic Controller",
+                    "x-name": "hydraulic_controller",
                     "x-hidden": false,
                     "type": "string",
-                    "description": "The app key for the simulator"
+                    "description": "The application which controls the hydraulic system",
+                    "default": null
+                },
+                "controlled_remote": {
+                    "title": "Controlled Remote",
+                    "x-name": "controlled_remote",
+                    "x-hidden": false,
+                    "type": "string",
+                    "description": "The name of the remote which controls the gate",
+                    "default": null
+                },
+                "open_direction": {
+                    "enum": [
+                        "Forward",
+                        "Reverse"
+                    ],
+                    "title": "Open Direction",
+                    "x-name": "open_direction",
+                    "x-hidden": false,
+                    "type": "string",
+                    "description": "The direction of oil flow that causes the gate to open. The other direction will cause the gate to close.",
+                    "default": "Forward"
+                },
+                "open_timeout": {
+                    "title": "Open Timeout",
+                    "x-name": "open_timeout",
+                    "x-hidden": false,
+                    "type": "integer",
+                    "description": "The number of seconds that the remote will be running to open the gate",
+                    "default": 5
+                },
+                "close_timeout": {
+                    "title": "Close Timeout",
+                    "x-name": "close_timeout",
+                    "x-hidden": false,
+                    "type": "integer",
+                    "description": "The number of seconds that the remote will be running to close the gate",
+                    "default": 5
                 }
             },
             "additionalElements": true,
-            "required": [
-                "a_funny_message",
-                "simulator_app_key"
-            ]
+            "required": []
         },
         "owner_org": "36a22e32-ab81-4a39-b400-869d532a052d",
         "container_registry_profile": "88953909-e9c4-4f81-9ec0-56239d4b0a2e",

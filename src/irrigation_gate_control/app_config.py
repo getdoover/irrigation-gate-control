@@ -5,6 +5,7 @@ from pydoover import config
 
 class IrrigationGateControlConfig(config.Schema):
     def __init__(self):
+
         self.hydraulic_controller = config.Application(
             "Hydraulic Controller",
             description="The application which controls the hydraulic system",
@@ -42,3 +43,6 @@ class IrrigationGateControlConfig(config.Schema):
 
 def export():
     IrrigationGateControlConfig().export(Path(__file__).parents[2] / "doover_config.json", "irrigation_gate_control")
+
+if __name__ == "__main__":
+    export()
