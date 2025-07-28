@@ -21,6 +21,7 @@ jobs:
 
       - name: Install the project
         run: |
+          apt update && apt install -y git && rm -rf /var/lib/apt/lists/*
           uv sync --locked --all-extras --dev
 
       - name: Run tests
