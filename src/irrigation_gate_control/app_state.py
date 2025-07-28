@@ -18,6 +18,7 @@ class IrrigationGateControlState:
         {"trigger": "start_closing", "source": "off", "dest": "prep_closing"},
         {"trigger": "ready_close", "source": "prep_closing", "dest": "closing"},
         {"trigger": "set_error", "source": "*", "dest": "error"},
+        {"trigger": "finish_movement", "source": ["opening", "closing"], "dest": "finished_movement"},
     ]
 
     def __init__(self, app):
@@ -34,7 +35,7 @@ class IrrigationGateControlState:
             {
                 "name": "opening",
                 "timeout": self.open_timeout_secs,
-                "on_timeout": "stop",
+                "on_timeout": "finish_movement",
             },
             {
                 "name": "prep_closing",
@@ -44,9 +45,10 @@ class IrrigationGateControlState:
             {
                 "name": "closing",
                 "timeout": self.close_timeout_secs,
-                "on_timeout": "stop",
+                "on_timeout": "finish_movement",
             },
             {"name": "error", "timeout": self.error_timeout_secs, "on_timeout": "stop"},
+            {"name": "finished_movement", "timeout": 5, "on_timeout": "stop"},
         ]
 
         self.state_machine = StateMachine(
@@ -83,26 +85,30 @@ class IrrigationGateControlState:
             elif self.app.has_close_command():
                 await self.start_closing()
 
-        elif s == "prep_opening":
-            if self.app.has_stop_command():
+        elif s == "finished_movement":
+            if not self.app.has_open_command() and not self.app.has_close_command() and self.app.is_remote_off():
                 await self.stop()
-            elif self.app.is_open_ready():
+
+        elif s == "prep_opening":
+            if not self.app.has_open_command():
+                await self.finish_movement()
+            if self.app.is_open_ready():
                 await self.ready_open()
 
         elif s == "opening":
+            if not self.app.has_open_command():
+                await self.finish_movement()
             if not self.app.is_open_ready():
-                await self.stop()
-            elif self.app.has_stop_command():
-                await self.stop()
+                await self.finish_movement()
 
         elif s == "prep_closing":
-            if self.app.has_stop_command():
-                await self.stop()
-            elif self.app.is_close_ready():
+            if not self.app.has_close_command():
+                await self.finish_movement()
+            if self.app.is_close_ready():
                 await self.ready_close()
 
         elif s == "closing":
+            if not self.app.has_close_command():
+                await self.finish_movement()
             if not self.app.is_close_ready():
-                await self.stop()
-            elif self.app.has_stop_command():
-                await self.stop()
+                await self.finish_movement()

@@ -39,11 +39,20 @@ class IrrigationGateControlApplication(Application):
     async def main_loop(self):
         s = await self.state.spin_state()
         log.info(f"State is: {s}")
-        self.ui.open_now.coerce(None)
-        self.ui.close_now.coerce(None)
-        self.ui.stop_now.coerce(None)
+
 
         if s == "off":
+            self.ui.open_now.coerce(None)
+            self.ui.close_now.coerce(None)
+            await self.set_tag_async(
+                f"request_{self.controlled_remote_key}",
+                "off",
+                self.hydraulic_controller_name,
+            )
+
+        elif s == "finished_movement":
+            self.ui.open_now.coerce(None)
+            self.ui.close_now.coerce(None)
             await self.set_tag_async(
                 f"request_{self.controlled_remote_key}",
                 "off",
@@ -86,21 +95,23 @@ class IrrigationGateControlApplication(Application):
             )
 
     def has_open_command(self):
+        print("has_open_command: ", str(self.ui.open_now.current_value))
         return self.ui.open_now.current_value
 
     def has_close_command(self):
         return self.ui.close_now.current_value
 
-    def has_stop_command(self):
-        return self.ui.stop_now.current_value
-
     def is_open_ready(self):
         return (
-            self.get_tag(f"request_{self.controlled_remote_key}") == self.open_direction
+            self.get_tag(f"{self.controlled_remote_key}", self.hydraulic_controller_name) == self.open_direction
         )
 
     def is_close_ready(self):
         return (
-            self.get_tag(f"request_{self.controlled_remote_key}")
-            == self.close_direction
+            self.get_tag(f"{self.controlled_remote_key}", self.hydraulic_controller_name) == self.close_direction
+        )
+
+    def is_remote_off(self):
+        return (
+            self.get_tag(f"{self.controlled_remote_key}", self.hydraulic_controller_name) == "off"
         )

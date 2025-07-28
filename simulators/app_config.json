@@ -1,6 +1,7 @@
 {
-    "simulator_app_key": "sim_app_key",
-    "digital_input_count": 1,
-    "digital_output_count": 2,
-    "a_funny_message": "yeeha"
+    "hydraulic_controller": "sim_app_key",
+    "controlled_remote": "remote_2",
+    "open_direction": "Forward",
+    "open_timeout": 10,
+    "close_timeout": 5
 }

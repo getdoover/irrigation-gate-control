@@ -21,16 +21,9 @@ class IrrigationGateControlUI:
             colour=ui.Colour.green,
             requires_confirm=True,
         )
-        self.stop_now = ui.Action(
-            "stop_now",
-            "Stop Now",
-            position=3,
-            colour=ui.Colour.red,
-            requires_confirm=False,
-        )
 
     def fetch(self):
-        return self.open_now, self.close_now, self.stop_now
+        return self.open_now, self.close_now
 
     def update(self):
         pass
