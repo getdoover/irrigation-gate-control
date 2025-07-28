@@ -95,7 +95,6 @@ class IrrigationGateControlApplication(Application):
             )
 
     def has_open_command(self):
-        print("has_open_command: ", str(self.ui.open_now.current_value))
         return self.ui.open_now.current_value
 
     def has_close_command(self):

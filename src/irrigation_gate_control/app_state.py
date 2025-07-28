@@ -92,23 +92,23 @@ class IrrigationGateControlState:
         elif s == "prep_opening":
             if not self.app.has_open_command():
                 await self.finish_movement()
-            if self.app.is_open_ready():
+            elif self.app.is_open_ready():
                 await self.ready_open()
 
         elif s == "opening":
             if not self.app.has_open_command():
                 await self.finish_movement()
-            if not self.app.is_open_ready():
+            elif not self.app.is_open_ready():
                 await self.finish_movement()
 
         elif s == "prep_closing":
             if not self.app.has_close_command():
                 await self.finish_movement()
-            if self.app.is_close_ready():
+            elif self.app.is_close_ready():
                 await self.ready_close()
 
         elif s == "closing":
             if not self.app.has_close_command():
                 await self.finish_movement()
-            if not self.app.is_close_ready():
+            elif not self.app.is_close_ready():
                 await self.finish_movement()
