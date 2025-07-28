@@ -18,7 +18,7 @@ class IrrigationGateControlState:
         {"trigger": "start_closing", "source": "off", "dest": "prep_closing"},
         {"trigger": "ready_close", "source": "prep_closing", "dest": "closing"},
         {"trigger": "set_error", "source": "*", "dest": "error"},
-        {"trigger": "finish_movement", "source": ["opening", "closing"], "dest": "finished_movement"},
+        {"trigger": "finish_movement", "source": ["prep_opening", "prep_closing", "opening", "closing"], "dest": "finished_movement"},
     ]
 
     def __init__(self, app):
