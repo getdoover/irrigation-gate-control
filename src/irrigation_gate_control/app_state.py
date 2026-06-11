@@ -13,9 +13,9 @@ class IrrigationGateControlState:
     # Keep transitions at class level since they don't depend on config
     transitions = [
         {"trigger": "stop", "source": "*", "dest": "off"},
-        {"trigger": "start_opening", "source": "off", "dest": "prep_opening"},
+        {"trigger": "start_opening", "source": ["off", "error"], "dest": "prep_opening"},
         {"trigger": "ready_open", "source": "prep_opening", "dest": "opening"},
-        {"trigger": "start_closing", "source": "off", "dest": "prep_closing"},
+        {"trigger": "start_closing", "source": ["off", "error"], "dest": "prep_closing"},
         {"trigger": "ready_close", "source": "prep_closing", "dest": "closing"},
         {"trigger": "set_error", "source": "*", "dest": "error"},
         {"trigger": "finish_movement", "source": ["prep_opening", "prep_closing", "opening", "closing"], "dest": "finished_movement"},
@@ -67,6 +67,16 @@ class IrrigationGateControlState:
     def close_timeout_secs(self):
         return self.app.config.close_timeout.value
 
+    async def request_open(self):
+        """Begin opening now, if the gate is in a state that allows it."""
+        if self.state in ("off", "error"):
+            await self.start_opening()
+
+    async def request_close(self):
+        """Begin closing now, if the gate is in a state that allows it."""
+        if self.state in ("off", "error"):
+            await self.start_closing()
+
     async def spin_state(self):
         last_state = None
         ## keep spinning until state has stabilised
@@ -79,36 +89,22 @@ class IrrigationGateControlState:
     async def evaluate_state(self):
         s = self.state
 
-        if s in ["off", "error"]:
-            if self.app.has_open_command():
-                await self.start_opening()
-            elif self.app.has_close_command():
-                await self.start_closing()
-
-        elif s == "finished_movement":
-            if not self.app.has_open_command() and not self.app.has_close_command() and self.app.is_remote_off():
+        if s == "finished_movement":
+            if self.app.is_remote_off():
                 await self.stop()
 
         elif s == "prep_opening":
-            if not self.app.has_open_command():
-                await self.finish_movement()
-            elif self.app.is_open_ready():
+            if self.app.is_open_ready():
                 await self.ready_open()
 
         elif s == "opening":
-            if not self.app.has_open_command():
-                await self.finish_movement()
-            elif not self.app.is_open_ready():
+            if not self.app.is_open_ready():
                 await self.finish_movement()
 
         elif s == "prep_closing":
-            if not self.app.has_close_command():
-                await self.finish_movement()
-            elif self.app.is_close_ready():
+            if self.app.is_close_ready():
                 await self.ready_close()
 
         elif s == "closing":
-            if not self.app.has_close_command():
-                await self.finish_movement()
-            elif not self.app.is_close_ready():
+            if not self.app.is_close_ready():
                 await self.finish_movement()
