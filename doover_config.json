@@ -15,25 +15,35 @@
         "config_schema": {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
             "$id": "",
-            "title": "Application Config",
+            "title": "$default",
             "type": "object",
             "properties": {
                 "hydraulic_controller": {
-                    "format": "doover-application",
                     "title": "Hydraulic Controller",
                     "x-name": "hydraulic_controller",
                     "x-hidden": false,
-                    "type": "string",
+                    "format": "doover-resource-application",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
                     "description": "The application which controls the hydraulic system",
-                    "default": null
+                    "default": null,
+                    "x-position": 0
                 },
                 "controlled_remote": {
                     "title": "Controlled Remote",
                     "x-name": "controlled_remote",
                     "x-hidden": false,
-                    "type": "string",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
                     "description": "The name of the remote which controls the gate",
-                    "default": null
+                    "default": null,
+                    "x-position": 1
                 },
                 "open_direction": {
                     "enum": [
@@ -43,25 +53,54 @@
                     "title": "Open Direction",
                     "x-name": "open_direction",
                     "x-hidden": false,
-                    "type": "string",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
                     "description": "The direction of oil flow that causes the gate to open. The other direction will cause the gate to close.",
-                    "default": "Forward"
+                    "default": "Forward",
+                    "x-position": 2
                 },
                 "open_timeout": {
                     "title": "Open Timeout",
                     "x-name": "open_timeout",
                     "x-hidden": false,
-                    "type": "integer",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "x-required": false,
                     "description": "The number of seconds that the remote will be running to open the gate",
-                    "default": 5
+                    "default": 5,
+                    "x-position": 3
                 },
                 "close_timeout": {
                     "title": "Close Timeout",
                     "x-name": "close_timeout",
                     "x-hidden": false,
-                    "type": "integer",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "x-required": false,
                     "description": "The number of seconds that the remote will be running to close the gate",
-                    "default": 5
+                    "default": 5,
+                    "x-position": 4
+                },
+                "dv_app_position": {
+                    "title": "Position",
+                    "x-name": "dv_app_position",
+                    "x-hidden": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Position of Application in UI Structure. Smaller numbers are closer to the top.",
+                    "default": 100,
+                    "x-position": 5,
+                    "minimum": 0
                 }
             },
             "additionalElements": true,
@@ -80,6 +119,38 @@
         "code_repo_id": null,
         "export_config_command": null,
         "run_command": null,
-        "lambda_arn": null
+        "lambda_arn": null,
+        "ui_schema": {
+            "displayString": "$config.app().APP_DISPLAY_NAME",
+            "hidden": "$config.app().hidden:boolean:false:boolean:false",
+            "position": "$config.app().dv_app_position:number:100",
+            "icon": null,
+            "colour": null,
+            "defaultOpen": "$config.app().dv_app_default_open:boolean",
+            "type": "uiApplication",
+            "name": "$config.app().APP_KEY",
+            "children": {
+                "open_now": {
+                    "name": "open_now",
+                    "type": "uiButton",
+                    "displayString": "Open Now",
+                    "position": 1,
+                    "hidden": false,
+                    "colour": "green",
+                    "currentValue": "$cmds.app().open_now",
+                    "requiresConfirm": true
+                },
+                "close_now": {
+                    "name": "close_now",
+                    "type": "uiButton",
+                    "displayString": "Close Now",
+                    "position": 2,
+                    "hidden": false,
+                    "colour": "green",
+                    "currentValue": "$cmds.app().close_now",
+                    "requiresConfirm": true
+                }
+            }
+        }
     }
 }

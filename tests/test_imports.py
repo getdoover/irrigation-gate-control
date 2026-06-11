@@ -11,12 +11,15 @@ def test_import_app():
 def test_config():
     from irrigation_gate_control.app_config import IrrigationGateControlConfig
 
-    config = IrrigationGateControlConfig()
-    assert isinstance(config.to_dict(), dict)
+    assert isinstance(IrrigationGateControlConfig.to_schema(), dict)
 
 def test_ui():
     from irrigation_gate_control.app_ui import IrrigationGateControlUI
     assert IrrigationGateControlUI
+
+def test_tags():
+    from irrigation_gate_control.app_tags import IrrigationGateControlTags
+    assert IrrigationGateControlTags
 
 def test_state():
     from irrigation_gate_control.app_state import IrrigationGateControlState

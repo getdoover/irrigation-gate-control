@@ -12,6 +12,7 @@ dependencies = [
 [project.scripts]
 doover-app-run = "irrigation_gate_control:main"
 export-config = "irrigation_gate_control.app_config:export"
+export-ui = "irrigation_gate_control.app_ui:export"
 
 [build-system]
 requires = ["hatchling"]
