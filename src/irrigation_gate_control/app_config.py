@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from pydoover import config
-from pydoover.config import ApplicationPosition
+from pydoover.config import ApplicationPosition, ApplicationDefaultOpen
 
 
 class IrrigationGateControlConfig(config.Schema):
@@ -33,6 +33,7 @@ class IrrigationGateControlConfig(config.Schema):
     )
 
     position = ApplicationPosition()
+    default_open = ApplicationDefaultOpen()
 
 
 def export():

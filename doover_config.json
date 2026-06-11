@@ -101,6 +101,19 @@
                     "default": 100,
                     "x-position": 5,
                     "minimum": 0
+                },
+                "dv_app_default_open": {
+                    "title": "Default Open",
+                    "x-name": "dv_app_default_open",
+                    "x-hidden": true,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Whether the application is default open in the UI. By default this is not set - which makes it dynamic on the number of apps installed.",
+                    "default": null,
+                    "x-position": 6
                 }
             },
             "additionalElements": true,
