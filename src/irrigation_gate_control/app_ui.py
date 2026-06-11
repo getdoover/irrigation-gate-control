@@ -3,7 +3,7 @@ from pathlib import Path
 from pydoover import ui
 
 
-class IrrigationGateControlUI(ui.UI):
+class IrrigationGateControlUI(ui.UI, default_open=True):
     open_now = ui.Button(
         "Open Now",
         position=1,
